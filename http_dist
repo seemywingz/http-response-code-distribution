@@ -1,0 +1,28 @@
+#!/bin/bash
+
+LOG=/var/log/nginx/access.log
+if [ $# -gt 0 ]; then
+  LOG=$1
+fi
+
+START=cat $LOG | cut -d ' ' -f2
+echo $START
+
+if [ -e $LOG ];
+then
+  echo
+  echo "    Count  Response Code"
+  
+  cat $LOG |\
+  cut -d '"' -f3 |\
+  cut -d ' ' -f2 |\
+  sort | uniq -c |\
+  sed 's/.\{7\}/&       /g'
+else
+  echo
+  echo "   !!!!  Invalid File !!!!"
+  echo "   run with no arguments to parse"
+  echo "   /var/log/nginx/access.log"
+fi
+
+
