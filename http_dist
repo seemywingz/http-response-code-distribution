@@ -5,12 +5,13 @@ if [ $# -gt 0 ]; then
   LOG=$1
 fi
 
-START=cat $LOG | cut -d ' ' -f2
-echo $START
+START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
+END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
 
 if [ -e $LOG ];
 then
-  echo
+ 
+  echo 
   echo "    Count  Response Code"
   
   cat $LOG |\
@@ -18,6 +19,10 @@ then
   cut -d ' ' -f2 |\
   sort | uniq -c |\
   sed 's/.\{7\}/&       /g'
+
+  echo
+  echo "Start: $START"
+  echo "  End: $END"
 else
   echo
   echo "   !!!!  Invalid File !!!!"
