@@ -1,18 +1,21 @@
 #!/bin/bash
 
 LOG=/var/log/nginx/access.log
-if [ $# -gt 0 ]; then
+if [ $# -gt 0 ]; 
+then
   LOG=$1
 fi
+
+printf  "\n\nreporting HTTP response code distribution for:\n  $LOG \n"
 
 START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
 END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
 
 if [ -e $LOG ];
 then
- 
-  echo 
-  echo "    Count  Response Code"
+
+  printf "\n Start:  %s \n" "$START" 
+  printf "\n    Count  Response Code \n"
   
   cat $LOG |\
   cut -d '"' -f3 |\
@@ -20,9 +23,7 @@ then
   sort | uniq -c |\
   sed 's/.\{7\}/&       /g'
 
-  echo
-  echo "Start: $START"
-  echo "  End: $END"
+  printf "\n End: $END \n\n"
 else
   echo
   echo "   !!!!  Invalid File !!!!"
