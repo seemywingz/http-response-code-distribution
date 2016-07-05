@@ -1,29 +1,36 @@
 #!/bin/bash
 
+
+function count {
+  cat $LOG |\
+  cut -d '"' -f3 |\
+  cut -d ' ' -f2 |\
+  sort | uniq -c |\
+  sed 's/.\{7\}/&       /g';
+}
+
+
 LOG=/var/log/nginx/access.log
 if [ $# -gt 0 ]; 
 then
   LOG=$1
 fi
-
-printf  "\n\nreporting HTTP response code distribution for:\n\n  $LOG \n"
+clear
+printf  "\n\nReporting HTTP response code distribution for:  $LOG \n"
 
 START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
-END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
 
 if [ -e $LOG ];
 then
 
   printf "\n Start:  %s \n" "$START" 
   printf "\n    Count  Response Code \n"
-  
-  cat $LOG |\
-  cut -d '"' -f3 |\
-  cut -d ' ' -f2 |\
-  sort | uniq -c |\
-  sed 's/.\{7\}/&       /g'
 
+  count
+ 
+  END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
   printf "\n End: $END \n\n"
+
 else
   echo
   echo "   !!!!  Invalid File !!!!"
