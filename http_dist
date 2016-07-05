@@ -6,7 +6,7 @@ then
   LOG=$1
 fi
 
-printf  "\n\nreporting HTTP response code distribution for:\n  $LOG \n"
+printf  "\n\nreporting HTTP response code distribution for:\n\n  $LOG \n"
 
 START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
 END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
