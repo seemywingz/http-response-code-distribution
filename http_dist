@@ -6,7 +6,7 @@ function count {
   cut -d '"' -f3 |\
   cut -d ' ' -f2 |\
   sort | uniq -c |\
-  sed 's/.\{7\}/&       /g';
+  sed 's/.\{7\}/&       /g'
 }
 
 
@@ -26,8 +26,12 @@ then
   printf "\n Start:  %s \n" "$START" 
   printf "\n    Count  Response Code \n"
 
-  count
- 
+  while :
+  do
+    count
+    sleep 2
+  done
+
   END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
   printf "\n End: $END \n\n"
 
