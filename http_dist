@@ -15,8 +15,11 @@ function count {
 }
 
 function finish {
-  END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
-  printf "\n Last Record Timestamp: $END \n\n"
+  if [ -e $LOG ]; 
+  then
+    END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
+    printf "\n Last Timestamp: $END \n\n"
+  fi
 }
 trap finish EXIT
 
@@ -26,17 +29,14 @@ then
   while :
   do
     printf "\033c"
-    printf  "\n\nReporting HTTP response code distribution for:\n  $LOG \n"
-    printf "\n First Record Timestamp:  %s \n" "$START" 
+    printf "\n\nReporting HTTP response code distribution for:\n  $LOG \n"
+    printf "\n First Timestamp:  %s \n" "$START" 
     printf "\n    Count  Response Code \n"
     count
-    sleep 2
+    sleep 1
   done
 else
-  echo
-  echo "   !!!!  Invalid File !!!!"
-  echo "   run with no arguments to parse"
-  echo "   /var/log/nginx/access.log"
+  printf "\n! Invalid File: $LOG \n\n"
 fi
 
 
