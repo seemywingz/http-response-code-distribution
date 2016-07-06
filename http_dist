@@ -1,5 +1,11 @@
 #!/bin/bash
 
+LOG=/var/log/nginx/access.log
+if [ $# -gt 0 ]; 
+then
+  LOG=$1
+fi
+
 function count {
   cat $LOG |\
   cut -d '"' -f3 |\
@@ -10,31 +16,21 @@ function count {
 
 function finish {
   END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
-  printf "\n End: $END \n\n"
+  printf "\n Last Record Timestamp: $END \n\n"
 }
 trap finish EXIT
 
-LOG=/var/log/nginx/access.log
-if [ $# -gt 0 ]; 
-then
-  LOG=$1
-fi
-
 if [ -e $LOG ];
 then
-  
   START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
-
   while :
   do
-    
     printf "\033c"
-    printf  "\n\nReporting HTTP response code distribution for:  $LOG \n"
-    printf "\n Start:  %s \n" "$START" 
+    printf  "\n\nReporting HTTP response code distribution for:\n  $LOG \n"
+    printf "\n First Record Timestamp:  %s \n" "$START" 
     printf "\n    Count  Response Code \n"
     count
     sleep 2
-
   done
 else
   echo
