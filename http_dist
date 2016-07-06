@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 function count {
   cat $LOG |\
   cut -d '"' -f3 |\
@@ -9,32 +8,34 @@ function count {
   sed 's/.\{7\}/&       /g'
 }
 
+function finish {
+  END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
+  printf "\n End: $END \n\n"
+}
+trap finish EXIT
 
 LOG=/var/log/nginx/access.log
 if [ $# -gt 0 ]; 
 then
   LOG=$1
 fi
-clear
-printf  "\n\nReporting HTTP response code distribution for:  $LOG \n"
-
-START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
 
 if [ -e $LOG ];
 then
-
-  printf "\n Start:  %s \n" "$START" 
-  printf "\n    Count  Response Code \n"
+  
+  START=$(head -1 $LOG | cut -d ' ' -f4 | cut -c2-)
 
   while :
   do
+    
+    printf "\033c"
+    printf  "\n\nReporting HTTP response code distribution for:  $LOG \n"
+    printf "\n Start:  %s \n" "$START" 
+    printf "\n    Count  Response Code \n"
     count
     sleep 2
+
   done
-
-  END=$(tail -n 1 $LOG | cut -d ' ' -f4 | cut -c2-)
-  printf "\n End: $END \n\n"
-
 else
   echo
   echo "   !!!!  Invalid File !!!!"
